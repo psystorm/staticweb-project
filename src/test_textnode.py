@@ -20,6 +20,7 @@ class TestTextNode(unittest.TestCase):
 		
 		node6 = TextNode("This is a text node","bold",None)
 		self.assertNotEqual(node5,node6)
+		self.assertEqual(node2,node6)
 
 
 if __name__ == "__main__":
