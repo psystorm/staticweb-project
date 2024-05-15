@@ -39,3 +39,44 @@ def text_node_to_html(text_node):
         return LeafNode('img', text_node.text, {"src": text_node.url})
     else:
         raise ValueError("Invalid text style")
+    
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    new_nodes = []
+    for node in old_nodes:
+        if (node.text.count(delimiter) % 2 == 0) and (node.text.count(delimiter) > 0):
+            text_var = node.text
+            old_node_type = node.text_style
+            for i in range(node.text.count(delimiter)):
+                text_parts = text_var.partition(delimiter)
+                if text_parts[0] == "":
+                    text_var = text_parts[2]
+                elif text_parts[2] == "":
+                    new_nodes.append(TextNode(text_parts[0], text_type))
+                else:
+                    if i % 2 == 0:
+                        new_nodes.append(TextNode(text_parts[0], old_node_type))
+                        text_var = text_parts[2]
+                    else:
+                        new_nodes.append(TextNode(text_parts[0], text_type))
+                        text_var = text_parts[2]
+                        if i == node.text.count(delimiter) - 1:
+                            new_nodes.append(TextNode(text_var, old_node_type))
+        elif node.text.count(delimiter) == 0:
+            new_nodes.append(TextNode(node.text, node.text_style))
+        else:
+            raise ValueError("Invalid markdown syntax")
+    return new_nodes
+
+def split_nodes_delimiter_mkII(old_nodes, delimiter,text_type):
+    new_nodes = []
+    for node in old_nodes:
+        temp = node.text.split(delimiter)
+        if len(temp) > 1:
+            for i in range(len(temp)):
+                if i % 2 == 0:
+                    new_nodes.append(TextNode(temp[i], text_type_text))
+                else:
+                    new_nodes.append(TextNode(temp[i], text_type))
+        else:
+            raise ValueError("Invalid markdown syntax")
+    return new_nodes
